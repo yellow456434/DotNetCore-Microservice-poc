@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 using productService.Models;
 
 namespace productService
@@ -18,27 +19,30 @@ namespace productService
         {
             var host = CreateWebHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<Models.ProductDbContext>();
-                    //Initialize(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding the database.");
-                }
-            }
+            #region 初始化DB資料
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    try
+            //    {
+            //        var context = services.GetRequiredService<Models.ProductDbContext>();
+            //        //Initialize(context);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var logger = services.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(ex, "An error occurred while seeding the database.");
+            //    }
+            //}
+            #endregion
 
             host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseNLog();
 
         public static void Initialize(ProductDbContext productDbContext)
         {
@@ -48,7 +52,7 @@ namespace productService
                 new Product(){ Name = "P2", Price = 222, CreatedTime = DateTime.Now, RemovedTime = DateTime.Now.AddMinutes(5) }
             };
 
-            foreach(var p in products)
+            foreach (var p in products)
             {
                 productDbContext.Products.Add(p);
             }
