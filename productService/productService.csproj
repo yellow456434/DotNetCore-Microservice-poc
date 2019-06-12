@@ -13,11 +13,30 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="NLog" Version="4.6.3" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.2" />
+    <PackageReference Include="Consul" Version="0.7.2.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="out\appsettings.Development.json" />
+    <Content Remove="out\nlog.config" />
+    <Content Remove="out\web.config" />
+    <Content Remove="out\appsettings.json" />
+    <Content Remove="out\productService.deps.json" />
+    <Content Remove="out\productService.runtimeconfig.json" />
+  </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="out\Consul.dll" />
+    <None Remove="out\NLog.Extensions.Logging.dll" />
+    <None Remove="out\NLog.Web.AspNetCore.dll" />
+    <None Remove="out\NLog.dll" />
+    <None Remove="out\productService.dll" />
+    <None Remove="out\productService.pdb" />
+    <None Remove="out\runtimes\unix\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
+    <None Remove="out\runtimes\win\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
   </ItemGroup>
 </Project>
