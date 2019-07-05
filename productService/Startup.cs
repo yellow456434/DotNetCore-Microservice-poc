@@ -30,10 +30,12 @@ namespace productService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //sql設定
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
+            //cors設定
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -46,12 +48,36 @@ namespace productService
 
             });
 
-            services.AddResponseCompression();
+            //壓縮設定
+            services.AddResponseCompression(options =>
+            {
+                //options.EnableForHttps = true;
+                //options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                //{
+                //    "image/png"
+                //});
+                options.Providers.Add<GzipCompressionProvider>();
+            });
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Optimal;
             });
 
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+                {
+                    DefaultDatabase = 15,
+                    EndPoints=
+                    {
+                        {"61.218.5.103", 6379 }
+                    }
+                    
+                };
+                //options.Configuration = "localhost";
+                //options.InstanceName = "SampleInstance";
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

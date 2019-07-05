@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using productService.Models;
@@ -12,36 +14,41 @@ namespace productService.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly ILogger _logger;
-        private readonly IConfiguration _config;
+        private readonly ILogger logger;
+        private readonly IConfiguration config;
         private readonly ProductDbContext productDb;
+        private readonly IDistributedCache cache;
 
-        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb)
+        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb, IDistributedCache cache)
         {
-            _logger = logger;
-
-            _config = config;
+            this.logger = logger;
+            this.config = config;
             this.productDb = productDb;
+            this.cache = cache;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            //_logger.LogWarning("Test 1111111111111");
+            //logger.LogWarning("Test 1111111111111");
 
-            var rnd = new Random();
+            //var rnd = new Random();
 
-            productDb.Products.Add(new Product()
-            {
-                Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
-                Price = rnd.Next(1, 100),
-                //CreatedTime = DateTime.Now
-                Note = "test" +rnd.Next(1,100)
-                
-            });
+            //productDb.Products.Add(new Product()
+            //{
+            //    Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
+            //    Price = rnd.Next(1, 100),
+            //    //CreatedTime = DateTime.Now
+            //    Note = "test" +rnd.Next(1,100)
 
-            productDb.SaveChanges();
+            //});
+
+            //productDb.SaveChanges();
+
+            
+            byte[] encodedCurrentTimeUTC = Encoding.UTF8.GetBytes(1.ToString());
+            cache.Set("test", encodedCurrentTimeUTC, new DistributedCacheEntryOptions() );
 
             return new string[] { "value1", "value2" };
         }
