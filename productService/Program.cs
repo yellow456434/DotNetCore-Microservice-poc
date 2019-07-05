@@ -41,6 +41,7 @@ namespace productService
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, config) => config.AddEnvironmentVariables())
                 .UseStartup<Startup>()
                 .UseNLog();
 
@@ -48,8 +49,8 @@ namespace productService
         {
             var products = new Product[]
             {
-                new Product(){ Name = "P1", Price = 111, CreatedTime = DateTime.Now },
-                new Product(){ Name = "P2", Price = 222, CreatedTime = DateTime.Now, RemovedTime = DateTime.Now.AddMinutes(5) }
+                new Product(){ Name = "P1", Price = 111, /*CreatedTime = DateTime.Now*/ },
+                new Product(){ Name = "P2", Price = 222, /*CreatedTime = DateTime.Now,*/ RemovedTime = DateTime.Now.AddMinutes(5) }
             };
 
             foreach (var p in products)

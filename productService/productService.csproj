@@ -39,4 +39,9 @@
     <None Remove="out\runtimes\unix\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
     <None Remove="out\runtimes\win\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20190516064908_init.Designer.cs" />
+    <Compile Remove="Migrations\20190516064908_init.cs" />
+    <Compile Remove="Migrations\ProductDbContextModelSnapshot.cs" />
+  </ItemGroup>
 </Project>
