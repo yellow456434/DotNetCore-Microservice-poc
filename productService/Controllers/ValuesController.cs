@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using productService.Models;
+using StackExchange.Redis;
 
 namespace productService.Controllers
 {
@@ -17,14 +18,14 @@ namespace productService.Controllers
         private readonly ILogger logger;
         private readonly IConfiguration config;
         private readonly ProductDbContext productDb;
-        private readonly IDistributedCache cache;
+        private readonly IConnectionMultiplexer redis;
 
-        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb, IDistributedCache cache)
+        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb, IConnectionMultiplexer redis)
         {
             this.logger = logger;
             this.config = config;
             this.productDb = productDb;
-            this.cache = cache;
+            this.redis = redis;
         }
 
         // GET api/values
@@ -47,8 +48,10 @@ namespace productService.Controllers
             //productDb.SaveChanges();
 
             
-            byte[] encodedCurrentTimeUTC = Encoding.UTF8.GetBytes(1.ToString());
-            cache.Set("test", encodedCurrentTimeUTC, new DistributedCacheEntryOptions() );
+            IDatabase db = redis.GetDatabase(14);
+
+            db.StringIncrement("test");
+            
 
             return new string[] { "value1", "value2" };
         }

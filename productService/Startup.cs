@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using productService.Models;
+using StackExchange.Redis;
 
 namespace productService
 {
@@ -63,21 +64,7 @@ namespace productService
                 options.Level = CompressionLevel.Optimal;
             });
 
-
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
-                {
-                    DefaultDatabase = 15,
-                    EndPoints=
-                    {
-                        {"61.218.5.103", 6379 }
-                    }
-                    
-                };
-                //options.Configuration = "localhost";
-                //options.InstanceName = "SampleInstance";
-            });
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("61.218.5.103:6379"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
