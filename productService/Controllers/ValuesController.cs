@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using productService.Models;
 using StackExchange.Redis;
 
@@ -26,6 +27,13 @@ namespace productService.Controllers
             this.config = config;
             this.productDb = productDb;
             this.redis = redis;
+        }
+
+        public class T
+        {
+            public int age { set; get; }
+            public string name { set; get; }
+            public DateTime time { set; get; }
         }
 
         // GET api/values
@@ -50,7 +58,18 @@ namespace productService.Controllers
             
             IDatabase db = redis.GetDatabase(14);
 
-            db.StringIncrement("test");
+
+
+            //db.StringSet("test", JsonConvert.SerializeObject(new T()
+            //{
+            //    name = "asd123我",
+            //    age = 34,
+            //    time = DateTime.Now
+            //}));
+
+            var t = JsonConvert.DeserializeObject<T>(db.StringGet("test"));
+
+           // db.StringIncrement("test");
             
 
             return new string[] { "value1", "value2" };
