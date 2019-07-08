@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using Consul;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using productService.Models;
 using StackExchange.Redis;
@@ -37,36 +39,44 @@ namespace productService
 
 
             //cors設定
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("*")
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
-                    });
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(
+            //        builder =>
+            //        {
+            //            builder.WithOrigins("*")
+            //                                .AllowAnyHeader()
+            //                                .AllowAnyMethod();
+            //        });
 
-            });
+            //});
 
             //壓縮設定
-            services.AddResponseCompression(options =>
-            {
-                //options.EnableForHttps = true;
-                //options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                //{
-                //    "image/png"
-                //});
-                options.Providers.Add<GzipCompressionProvider>();
-            });
-            services.Configure<GzipCompressionProviderOptions>(options =>
-            {
-                options.Level = CompressionLevel.Optimal;
-            });
+            //services.AddResponseCompression(options =>
+            //{
+            //    //options.EnableForHttps = true;
+            //    //options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+            //    //{
+            //    //    "image/png"
+            //    //});
 
+            //    options.Providers.Add<BrotliCompressionProvider>();
+            //});
+            //services.Configure<BrotliCompressionProviderOptions>(options =>
+            //{
+            //    options.Level = CompressionLevel.Optimal;
+            //});
+
+            //設定redis
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("61.218.5.103:6379"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //設定https
+            //services.AddHttpsRedirection(options =>
+            //{
+            //    options.HttpsPort = 5001;
+            //});
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +84,7 @@ namespace productService
         {
             if (env.IsDevelopment())
             {
+                
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -81,17 +92,24 @@ namespace productService
                 app.UseHsts();
             }
 
+            //設定靜態資源路徑
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "imgs")),
+            //    RequestPath = "/imgs"
+            //});
+
+            //proxy 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-
             app.UseAuthentication();
 
             //app.UseHttpsRedirection();
 
-            app.UseCors();
-            app.UseResponseCompression();
+            //app.UseCors();
+            //app.UseResponseCompression();
             app.UseMvc();
         }
     }

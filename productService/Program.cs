@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,16 @@ namespace productService
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostContext, config) => config.AddEnvironmentVariables())
                 .UseStartup<Startup>()
+                .ConfigureKestrel((context, options) =>
+                {
+                   
+                    options.Listen(IPAddress.Loopback, 5000);
+                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    {
+                        //listenOptions.UseHttps("testCert.pfx", "testPassword");
+                        listenOptions.UseHttps();
+                    });
+                })
                 .UseNLog();
 
         public static void Initialize(ProductDbContext productDbContext)
