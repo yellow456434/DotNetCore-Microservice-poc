@@ -70,7 +70,7 @@ namespace productService
             //設定redis
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("61.218.5.103:6379"));
 
-            //設定https
+            //特定導向https 5001
             //services.AddHttpsRedirection(options =>
             //{
             //    options.HttpsPort = 5001;
@@ -106,6 +106,7 @@ namespace productService
             });
             app.UseAuthentication();
 
+            //特定導向https
             //app.UseHttpsRedirection();
 
             //app.UseCors();

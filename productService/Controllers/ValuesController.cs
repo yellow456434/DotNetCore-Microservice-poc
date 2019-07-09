@@ -42,20 +42,20 @@ namespace productService.Controllers
         {
             //logger.LogWarning("Test 1111111111111");
 
-            //var rnd = new Random();
+            var rnd = new Random();
 
-            //productDb.Products.Add(new Product()
-            //{
-            //    Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
-            //    Price = rnd.Next(1, 100),
-            //    //CreatedTime = DateTime.Now
-            //    Note = "test" +rnd.Next(1,100)
+            productDb.Products.Add(new Product()
+            {
+                Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
+                Price = rnd.Next(1, 100),
+                //CreatedTime = DateTime.Now
+                Note = "test" + rnd.Next(1, 100)
 
-            //});
+            });
 
-            //productDb.SaveChanges();
+            productDb.SaveChanges();
 
-            
+
             IDatabase db = redis.GetDatabase(14);
 
 
@@ -85,9 +85,26 @@ namespace productService.Controllers
         // POST api/values
 
         [HttpPost]
-        public string Post( x x)
+        public List<T> Post(x x)
         {
-            return "post rRequest Method: POST\nStatus Code: 200 OK\nRemote Address: [::1]:5000\nReferrer Policy: no-referrer-when-downgrade\nAccess-Control-Allow-Origin: *\nContent-Encoding: gzip\nContent-Type: text/plain; charset=utf-8\nDate: Fri, 05 Jul 2019 05:33:56 GMT\nServer: Kestrel\nTransfer-Encoding: chunked\nVary: Accept-Encoding\nProvisional headers are shown\nAccept: application/json, text/plain, */*\nContent-Type: application/json\nOrigin: http://localhost:8100\nReferer: http://localhost:8100/\nUser-Agent: Mozilla/5.0 (Macin\", \"Request Method: POST\nStatus Code: 200 OK\nRemote Address: [::1]:5000\nReferrer Policy: no-referrer-when-downgrade\nAccess-Control-Allow-Origin: *\nContent-Encoding: gzip\nContent-Type: text/plain; charset=utf-8\nDate: Fri, 05 Jul 2019 05:33:56 GMT\nServer: Kestrel\nTransfer-Encoding: chunked\nVary: Accept-Encoding\nProvisional headers are shown\nAccept: application/json, text/plain, */*\nContent-Type: application/json\nOrigin: http://localhost:8100\nReferer: http://localhost:8100/\nUser-Agent: Mozilla/5.0 (Macinturn";
+
+            var xx = new T()
+            {
+                age = 7,
+                name = "testesttesttesttesttesttesttesttesttesttestt" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                time = DateTime.Now
+            };
+
+
+            var ts = new List<T>();
+
+            for(var i = 0; i < 50; i++)
+            {
+                ts.Add(xx);
+            }
+            
+
+            return ts;
         }
 
         public class x
