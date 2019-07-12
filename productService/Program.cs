@@ -46,7 +46,6 @@ namespace productService
                 .UseStartup<Startup>()
                 .ConfigureKestrel((context, options) =>
                 {
-                   
                     options.Listen(IPAddress.Loopback, 5000);
                     options.Listen(IPAddress.Loopback, 5001, listenOptions =>
                     {

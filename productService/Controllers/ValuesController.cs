@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using productService.Models;
+using productService.Services;
 using StackExchange.Redis;
 
 namespace productService.Controllers
@@ -37,28 +39,34 @@ namespace productService.Controllers
         }
 
         // GET api/values
+        //[CustomTestAuthorizationFilter]
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            //logger.LogWarning("Test 1111111111111");
+            //var ac = Request;
+            //Response.Headers.Add("ttt", "addheader");
+            //Response.Cookies.Append("t", "sd");
 
-            var rnd = new Random();
+            var a = config["jwtKey"];
 
-            productDb.Products.Add(new Product()
-            {
-                Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
-                Price = rnd.Next(1, 100),
-                //CreatedTime = DateTime.Now
-                Note = "test" + rnd.Next(1, 100)
+            logger.LogWarning("Test 1111111111111");
 
-            });
+            //var rnd = new Random();
 
-            productDb.SaveChanges();
+            //productDb.Products.Add(new Product()
+            //{
+            //    Name = "product" + DateTime.Now.ToString("MMddHHmmss"),
+            //    Price = rnd.Next(1, 100),
+            //    //CreatedTime = DateTime.Now
+            //    Note = "test" + rnd.Next(1, 100)
+
+            //});
+
+            //productDb.SaveChanges();
 
 
-            IDatabase db = redis.GetDatabase(14);
-
-
+            //IDatabase db = redis.GetDatabase(14);
 
             //db.StringSet("test", JsonConvert.SerializeObject(new T()
             //{
@@ -67,12 +75,11 @@ namespace productService.Controllers
             //    time = DateTime.Now
             //}));
 
-            var t = JsonConvert.DeserializeObject<T>(db.StringGet("test"));
+            //            var t = JsonConvert.DeserializeObject<T>(db.StringGet("test"));
 
-           // db.StringIncrement("test");
-            
+            // db.StringIncrement("test");
 
-            return new string[] { "value1", "value2" };
+            return new string[] { "value1", "value2"};
         }
 
         // GET api/values/5
