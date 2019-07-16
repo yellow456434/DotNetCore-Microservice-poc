@@ -40,7 +40,7 @@ namespace productService.Controllers
 
         // GET api/values
         //[CustomTestAuthorizationFilter]
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
