@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -44,13 +45,15 @@ namespace productService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var a =HttpContext.User.Claims.ToList();
+
             //var ac = Request;
             //Response.Headers.Add("ttt", "addheader");
             //Response.Cookies.Append("t", "sd");
 
-            var a = config["jwtKey"];
+            //var a = config["jwtKey"];
 
-            logger.LogWarning("Test 1111111111111");
+            //logger.LogWarning("Test 1111111111111");
 
             //var rnd = new Random();
 
