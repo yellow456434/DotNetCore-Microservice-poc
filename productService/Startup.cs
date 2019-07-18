@@ -126,6 +126,27 @@ namespace productService
                         //ValidAudience = "123",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtKey"]))
                     };
+
+                    //jwtBearerOptions.Events = new JwtBearerEvents()
+                    //{
+                    //    OnAuthenticationFailed = context =>
+                    //    {
+                    //        context.NoResult();
+
+                    //        context.Response.StatusCode = 401;
+                    //        context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
+                    //        Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+
+                    //        return Task.CompletedTask;
+                    //    },
+                    //    OnTokenValidated = context =>
+                    //    {
+                    //        Console.WriteLine("OnTokenValidated: " +
+                    //            context.SecurityToken);
+                    //        return Task.CompletedTask;
+                    //    }
+
+                    //};
                 });
 
             //壓縮設定
@@ -161,7 +182,7 @@ namespace productService
         {
             if (env.IsDevelopment())
             {
-                
+
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -193,12 +214,12 @@ namespace productService
 
             app.Map("/api/midd", mapApp =>
             {
-                
+
                 mapApp.Use(async (context, next) =>
                 {
                     await context.Response.WriteAsync("1 Middleware in. \r\n");
                     await next.Invoke();
-                   //await context.Response.WriteAsync("Second Middleware out. \r\n");
+                    //await context.Response.WriteAsync("Second Middleware out. \r\n");
                 });
                 mapApp.UseMiddleware<CustomTestMiddleware>();
             });
