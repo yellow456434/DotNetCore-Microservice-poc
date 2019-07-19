@@ -46,12 +46,12 @@ namespace productService
                 .UseStartup<Startup>()
                 .ConfigureKestrel((context, options) =>
                 {
-                    options.Listen(IPAddress.Loopback, 5000);
-                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                    {
-                        //listenOptions.UseHttps("testCert.pfx", "testPassword");
-                        listenOptions.UseHttps();
-                    });
+                    options.ListenAnyIP(5000);
+                    //options.ListenAnyIP(IPAddress.Loopback, 5001, listenOptions =>
+                    //{
+                    //    //listenOptions.UseHttps("testCert.pfx", "testPassword");
+                    //    listenOptions.UseHttps();
+                    //});
                 })
                 .UseNLog();
 
