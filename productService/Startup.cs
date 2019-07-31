@@ -37,19 +37,25 @@ namespace productService
             Configuration = configuration;
         }
 
+        //public static readonly LoggerFactory DbLoggerFactory = new LoggerFactory(new ILoggerProvider[] {
+        //    new ConsoleLoggerProvider(
+        //        (category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Debug,
+        //        true),
+        //    new NLogLoggerProvider() });
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             //sql設定
-            services.AddDbContext<ProductDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ProductDbContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //identity Core
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            ////identity Core
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.Configure<IdentityOptions>(options =>
             {
