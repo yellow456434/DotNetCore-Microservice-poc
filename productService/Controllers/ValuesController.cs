@@ -112,7 +112,9 @@ namespace productService.Controllers
             {
                 ts.Add(xx);
             }
-            
+
+            //轉換class to string，方便寫log
+            var xxStr = ObjectDumper.Dump(xx, DumpStyle.CSharp);
 
             return ts;
         }

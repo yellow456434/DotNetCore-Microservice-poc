@@ -1,51 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Models\AccountApi\" />
-    <Folder Include="Models\Repository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
+    <PackageReference Include="ObjectDumper.NET" Version="2.4.19218.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.4" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="out\appsettings.Development.json" />
-    <Content Remove="out\nlog.config" />
-    <Content Remove="out\web.config" />
-    <Content Remove="out\appsettings.json" />
-    <Content Remove="out\productService.deps.json" />
-    <Content Remove="out\productService.runtimeconfig.json" />
-  </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="out\Consul.dll" />
-    <None Remove="out\NLog.Extensions.Logging.dll" />
-    <None Remove="out\NLog.Web.AspNetCore.dll" />
-    <None Remove="out\NLog.dll" />
-    <None Remove="out\productService.dll" />
-    <None Remove="out\productService.pdb" />
-    <None Remove="out\runtimes\unix\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
-    <None Remove="out\runtimes\win\lib\netstandard1.3\System.Net.Http.WinHttpHandler.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Migrations\20190516064908_init.Designer.cs" />
-    <Compile Remove="Migrations\20190516064908_init.cs" />
-    <Compile Remove="Migrations\ProductDbContextModelSnapshot.cs" />
-    <Compile Remove="Models\AccountApi\Model.cs" />
   </ItemGroup>
 </Project>

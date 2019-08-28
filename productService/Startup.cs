@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using productService.Middlewares;
 using productService.Models;
 using productService.Services;
 using StackExchange.Redis;
@@ -37,6 +38,7 @@ namespace productService
             Configuration = configuration;
         }
 
+        // [Obsolete]
         //public static readonly LoggerFactory DbLoggerFactory = new LoggerFactory(new ILoggerProvider[] {
         //    new ConsoleLoggerProvider(
         //        (category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Debug,
@@ -179,7 +181,12 @@ namespace productService
             //    options.HttpsPort = 5001;
             //});
 
+            //services.AddSingleton<JwtAuth>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //csv encoding使用big5 dotnet需特別載入(此為Singleton)
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -196,6 +203,7 @@ namespace productService
             }
 
             //設定靜態資源路徑
+            //Directory.CreateDirectory(Path.GetDirectoryName(Configuration["ImgFileRoot"]));
             //app.UseStaticFiles(new StaticFileOptions
             //{
             //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "imgs")),
@@ -228,6 +236,8 @@ namespace productService
                 });
                 mapApp.UseMiddleware<CustomTestMiddleware>();
             });
+
+            app.UseMiddleware<RequestResponseLogging>();
 
             app.UseMvc();
         }

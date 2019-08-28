@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.WindowsServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 using productService.Models;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace productService
 {
@@ -18,7 +17,18 @@ namespace productService
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args).Build();
+            var isService = !(Debugger.IsAttached || args.Contains("--console"));
+
+            if (isService)
+            {
+                //serviceRoot
+                Directory.SetCurrentDirectory(@"D:\Web\BackEndApi");
+            }
+
+            var builder = CreateWebHostBuilder(
+                args.Where(arg => arg != "--console").ToArray());
+
+            var host = builder.Build();
 
             #region 初始化DB資料
             //using (var scope = host.Services.CreateScope())
@@ -37,7 +47,14 @@ namespace productService
             //}
             #endregion
 
-            host.Run();
+            if (isService)
+            {
+                host.RunAsService();
+            }
+            else
+            {
+                host.Run();
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
