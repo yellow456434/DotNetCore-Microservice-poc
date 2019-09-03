@@ -1,31 +1,21 @@
-﻿
-using System;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using productService.Middlewares;
 using productService.Models;
 using productService.Services;
 using StackExchange.Redis;
+using System;
+using System.IO;
+using System.Text;
 
 namespace productService
 {
@@ -51,6 +41,10 @@ namespace productService
             //sql設定
             //services.AddDbContext<ProductDbContext>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<ServiceA>();
+            services.AddSingleton<ServiceB>();
+            services.AddSingleton<IServiceResolver, ServiceResolver>();
 
             ////identity Core
             //services.AddDbContext<ApplicationDbContext>(options =>

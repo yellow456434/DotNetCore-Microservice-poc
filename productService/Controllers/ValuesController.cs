@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using productService.Models;
 using productService.Services;
 using StackExchange.Redis;
+using static productService.Startup;
 
 namespace productService.Controllers
 {
@@ -23,13 +24,16 @@ namespace productService.Controllers
         private readonly IConfiguration config;
         private readonly ProductDbContext productDb;
         private readonly IConnectionMultiplexer redis;
+        private readonly IService service;
 
-        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb, IConnectionMultiplexer redis)
+        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb,
+            IConnectionMultiplexer redis, IServiceResolver iserviceResolver)
         {
             this.logger = logger;
             this.config = config;
             this.productDb = productDb;
             this.redis = redis;
+            this.service = iserviceResolver.GetServiceByName("B");
         }
 
         public class T
@@ -45,7 +49,8 @@ namespace productService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var a =HttpContext.User.Claims.ToList();
+            //var a =HttpContext.User.Claims.ToList();
+            service.ToString();
 
             //var ac = Request;
             //Response.Headers.Add("ttt", "addheader");
