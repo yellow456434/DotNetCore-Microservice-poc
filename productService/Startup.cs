@@ -177,6 +177,9 @@ namespace productService
 
             //services.AddSingleton<JwtAuth>();
 
+            //HttpRequest
+            services.AddHttpClient();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //csv encoding使用big5 dotnet需特別載入(此為Singleton)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +27,10 @@ namespace productService.Controllers
         private readonly ProductDbContext productDb;
         private readonly IConnectionMultiplexer redis;
         private readonly IService service;
+        private readonly IHttpClientFactory clientFactory;
 
-        public ValuesController(ILogger<ValuesController> logger, IConfiguration config, ProductDbContext productDb,
+        public ValuesController(ILogger<ValuesController> logger, IConfiguration config,
+             ProductDbContext productDb, IHttpClientFactory clientFactory,
             IConnectionMultiplexer redis, IServiceResolver iserviceResolver)
         {
             this.logger = logger;
@@ -34,6 +38,7 @@ namespace productService.Controllers
             this.productDb = productDb;
             this.redis = redis;
             this.service = iserviceResolver.GetServiceByName("B");
+            this.clientFactory = clientFactory;
         }
 
         public class T
@@ -43,14 +48,36 @@ namespace productService.Controllers
             public DateTime time { set; get; }
         }
 
+        public class PostData
+        {
+            public string id { set; get; }
+        }
+
         // GET api/values
         //[CustomTestAuthorizationFilter]
         //[Authorize]
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
+            var request = new HttpRequestMessage(HttpMethod.Post,"https://XXXX");
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(
+                new PostData
+                {
+                    id = "123123"
+                }
+                ), Encoding.UTF8, "application/json");
+
+            var client = clientFactory.CreateClient();
+            //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = await client.SendAsync(request);
+            var data = await response.Content.ReadAsStringAsync();
+            
+
+
             //var a =HttpContext.User.Claims.ToList();
-            service.ToString();
+            //service.ToString();
 
             //var ac = Request;
             //Response.Headers.Add("ttt", "addheader");
