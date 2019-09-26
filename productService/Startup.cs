@@ -167,7 +167,7 @@ namespace productService
             //});
 
             //設定redis
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("61.218.5.103:6379"));
+            //services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("ip:6379"));
 
             //特定導向https 5001
             //services.AddHttpsRedirection(options =>

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using productService.Models;
 using productService.Services;
+using RabbitMQ.Client;
 using StackExchange.Redis;
 using static productService.Startup;
 
@@ -30,13 +31,13 @@ namespace productService.Controllers
         private readonly IHttpClientFactory clientFactory;
 
         public ValuesController(ILogger<ValuesController> logger, IConfiguration config,
-             ProductDbContext productDb, IHttpClientFactory clientFactory,
-            IConnectionMultiplexer redis, IServiceResolver iserviceResolver)
-        {
+              IHttpClientFactory clientFactory,
+             IServiceResolver iserviceResolver)
+        { //IConnectionMultiplexer redis, ProductDbContext productDb,
             this.logger = logger;
             this.config = config;
-            this.productDb = productDb;
-            this.redis = redis;
+            //this.productDb = productDb;
+            //this.redis = redis;
             this.service = iserviceResolver.GetServiceByName("B");
             this.clientFactory = clientFactory;
         }
@@ -59,7 +60,7 @@ namespace productService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post,"https://XXXX");
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://XXXX");
 
             request.Content = new StringContent(JsonConvert.SerializeObject(
                 new PostData
@@ -73,7 +74,7 @@ namespace productService.Controllers
 
             var response = await client.SendAsync(request);
             var data = await response.Content.ReadAsStringAsync();
-            
+
 
 
             //var a =HttpContext.User.Claims.ToList();
@@ -114,14 +115,35 @@ namespace productService.Controllers
 
             // db.StringIncrement("test");
 
-            return new string[] { "value1", "value2"};
+            return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("sendMsg")]
+        public async Task<string> SendMsg(string msg)
         {
-            return "value"+id;
+
+            var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: "hello",
+                                 durable: true,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
+
+                string message = "Hello World!";
+                var body = Encoding.UTF8.GetBytes(message);
+
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "hello",
+                                     basicProperties: null,
+                                     body: body);
+            }
+
+
+            return "ok";
         }
 
         // POST api/values
@@ -140,7 +162,7 @@ namespace productService.Controllers
 
             var ts = new List<T>();
 
-            for(var i = 0; i < 50; i++)
+            for (var i = 0; i < 50; i++)
             {
                 ts.Add(xx);
             }
