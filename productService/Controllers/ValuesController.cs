@@ -59,7 +59,7 @@ namespace productService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post,"https://XXXX");
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://XXXX");
 
             request.Content = new StringContent(JsonConvert.SerializeObject(
                 new PostData
@@ -73,7 +73,14 @@ namespace productService.Controllers
 
             var response = await client.SendAsync(request);
             var data = await response.Content.ReadAsStringAsync();
-            
+
+
+            var constants = Utils.GetEnumValues<Constant>();
+            foreach (var c in constants)
+            {
+                var key = (int)c;
+                var name = Utils.GetEnumDescription(c);
+            }
 
 
             //var a =HttpContext.User.Claims.ToList();
@@ -114,14 +121,14 @@ namespace productService.Controllers
 
             // db.StringIncrement("test");
 
-            return new string[] { "value1", "value2"};
+            return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value"+id;
+            return "value" + id;
         }
 
         // POST api/values
@@ -140,7 +147,7 @@ namespace productService.Controllers
 
             var ts = new List<T>();
 
-            for(var i = 0; i < 50; i++)
+            for (var i = 0; i < 50; i++)
             {
                 ts.Add(xx);
             }
