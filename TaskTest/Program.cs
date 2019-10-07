@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,27 +10,36 @@ namespace TaskTest
     class Program
     {
         //private static Object _lock = new Object();
-
-        private static AutoResetEvent wait = new AutoResetEvent(true);
-
+        
+        private static BlockingCollection<Tuple<int, AutoResetEvent>> waitDict = new BlockingCollection<Tuple<int, AutoResetEvent>>();
+        private static Dictionary<int, AutoResetEvent> waitDictErr = new Dictionary<int, AutoResetEvent>();
+        private static ConcurrentDictionary<int, AutoResetEvent> waitDict2 = new ConcurrentDictionary<int, AutoResetEvent>();
         static void Main(string[] args)
         {
-             
-            for (int i = 1; i < 4; i++)
-            {
-                Task.Run(() =>
-                {
-                    ThreadProc();
-                });
-            }
 
-            for (int i = 1; i < 4; i++)
-            {
-                Console.WriteLine("Press Enter to release a thread.");
-                Console.ReadLine();
-                wait.Set();
-                
-            } 
+            var logFile = System.IO.File.Create("/Users/willymbp/Desktop/aaa.txt");
+            var logWriter = new System.IO.StreamWriter(logFile);
+            logWriter.WriteLine("test");
+            logWriter.Dispose();
+
+            //for (int i = 1; i < 10; i++)
+            //{
+            //    var idx = i;
+            //    Task.Run(() =>
+            //    {
+            //        ThreadProc(idx);
+            //    });
+            //}
+
+            //for (int i = 1; i < 10; i++)
+            //{
+            //    Console.WriteLine("Press Enter to release a thread.");
+            //    Console.ReadLine();
+            //    //waitDictErr[i].Set();
+            //    waitDict2[i].Set();
+            //    //var wait = waitDict.Where(x => x.Item1 == i).First();
+            //    // wait.Item2.Set();
+            //}
 
             #region task thread test
             //try
@@ -60,15 +70,19 @@ namespace TaskTest
         }
         private static BlockingCollection<int> data = new BlockingCollection<int>(); //共享資料
 
-        private static void ThreadProc()
+        private static void ThreadProc(int idx)
         {
-            string name = Thread.CurrentThread.Name;
+            AutoResetEvent wait = new AutoResetEvent(false);
 
-            Console.WriteLine("{0} waits on AutoResetEvent #2.", name);
+            // waitDict.Add(new Tuple<int, AutoResetEvent>(idx, wait));
+            //waitDictErr.Add(idx, wait);
+            waitDict2.GetOrAdd(idx, wait);
+
+            Console.WriteLine("waits on AutoResetEvent #2.");
             wait.WaitOne();
-            Console.WriteLine("{0} is released from AutoResetEvent #2.", name);
+            Console.WriteLine("released from AutoResetEvent #2.");
 
-            Console.WriteLine("{0} ends.", name);
+            Console.WriteLine("ends.");
         }
 
         private static void Producer(int i) //生產者

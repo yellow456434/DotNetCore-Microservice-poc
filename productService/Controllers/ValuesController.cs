@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using productService.Models;
 using productService.Services;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using StackExchange.Redis;
 using static productService.Startup;
 
@@ -29,10 +30,11 @@ namespace productService.Controllers
         private readonly IConnectionMultiplexer redis;
         private readonly IService service;
         private readonly IHttpClientFactory clientFactory;
+        private readonly RpcClient rpcClient;
 
         public ValuesController(ILogger<ValuesController> logger, IConfiguration config,
               IHttpClientFactory clientFactory,
-             IServiceResolver iserviceResolver)
+             IServiceResolver iserviceResolver, RpcClient rpcClient)
         { //IConnectionMultiplexer redis, ProductDbContext productDb,
             this.logger = logger;
             this.config = config;
@@ -40,6 +42,7 @@ namespace productService.Controllers
             //this.redis = redis;
             this.service = iserviceResolver.GetServiceByName("B");
             this.clientFactory = clientFactory;
+            this.rpcClient = rpcClient;
         }
 
         public class T
@@ -118,7 +121,7 @@ namespace productService.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
+        
         [HttpGet("sendMsg")]
         public async Task<string> SendMsg(string msg)
         {
@@ -144,6 +147,15 @@ namespace productService.Controllers
 
 
             return "ok";
+        }
+
+        [HttpGet("sendRPCMsg")]
+        public async Task<string> SendRPCMsg(string msg)
+        {
+            var response =  await rpcClient.Call(msg);
+
+
+            return response;
         }
 
         // POST api/values

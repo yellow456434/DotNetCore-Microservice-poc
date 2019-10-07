@@ -42,10 +42,6 @@ namespace productService
             //services.AddDbContext<ProductDbContext>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<ServiceA>();
-            services.AddSingleton<ServiceB>();
-            services.AddSingleton<IServiceResolver, ServiceResolver>();
-
             ////identity Core
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -179,6 +175,12 @@ namespace productService
 
             //HttpRequest
             services.AddHttpClient();
+
+            services.AddTransient<ServiceA>();
+            services.AddSingleton<ServiceB>();
+            services.AddSingleton<IServiceResolver, ServiceResolver>();
+
+            services.AddScoped<RpcClient>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
