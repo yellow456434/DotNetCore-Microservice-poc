@@ -78,6 +78,12 @@ namespace productService.Controllers
             var response = await client.SendAsync(request);
             var data = await response.Content.ReadAsStringAsync();
 
+            var constants = Utils.GetEnumValues<Constant>();
+            foreach (var c in constants)
+            {
+                var key = (int)c;
+                var name = Utils.GetEnumDescription(c);
+            }
 
 
             //var a =HttpContext.User.Claims.ToList();
@@ -125,7 +131,6 @@ namespace productService.Controllers
         [HttpGet("sendMsg")]
         public async Task<string> SendMsg(string msg)
         {
-
             var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
