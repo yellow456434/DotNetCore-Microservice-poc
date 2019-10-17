@@ -27,7 +27,7 @@ namespace OrderService
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddHostedService<MessageProc>();
+            //services.AddHostedService<MessageProc>();
             services.AddHostedService<MessageRPCProc>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

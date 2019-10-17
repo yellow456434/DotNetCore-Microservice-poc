@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using StackExchange.Redis;
 
 namespace productService.Services
 {
-    public class RpcClient
+    public class RpcClient : IDisposable
     {
-        private readonly IConnection connection;
+        
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
@@ -21,23 +22,24 @@ namespace productService.Services
         //private readonly AutoResetEvent wait = new AutoResetEvent(false);
         private readonly IBasicProperties props;
         private readonly string correlationId;
+        private readonly IConnectionMultiplexer redis;
 
-        public RpcClient()
+        public RpcClient(RabbitMQService rabbitMQService, IConnectionMultiplexer redis)
         {
             Console.WriteLine("RpcClient init");
-            var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
+            this.redis = redis;
 
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
+            channel = rabbitMQService.getConnection().CreateModel();
 
             props = channel.CreateBasicProperties();
 
             correlationId = Guid.NewGuid().ToString();
             props.CorrelationId = correlationId;
 
-
-            replyQueueName = channel.QueueDeclare("test1", false, false, false).QueueName;
+            replyQueueName = channel.QueueDeclare("test").QueueName;
             props.ReplyTo = replyQueueName;
+
+            channel.BasicQos(0, 1, false);
 
             consumer = new EventingBasicConsumer(channel);
             consumer.Received += ReplyQueue_Received;
@@ -68,13 +70,6 @@ namespace productService.Services
             return m;
         }
 
-        public void Close()
-        {
-            consumer.Received -= ReplyQueue_Received;
-            channel.Dispose();
-            connection.Close();
-        }
-
         private void ReplyQueue_Received(object model, BasicDeliverEventArgs ea)
         {
             var body = ea.Body;
@@ -83,16 +78,27 @@ namespace productService.Services
             if (ea.BasicProperties.CorrelationId == correlationId)
             {
                 msg.Add(response);
+
+                IDatabase db = redis.GetDatabase(14);
+                db.StringIncrement("received");
+
+                channel.BasicAck(ea.DeliveryTag, false);
+
                 waitList.Take().Set();
 
                 //msg = response;
                 //wait.Set();
-
-                channel.BasicAck(ea.DeliveryTag, false);
-
-                this.Close();
             }
+            else
+            {
+                channel.BasicNack(ea.DeliveryTag, false, true);
+            }            
+        }
 
+        public void Dispose()
+        {
+            consumer.Received -= ReplyQueue_Received;
+            channel.Dispose();
         }
     }
 }
