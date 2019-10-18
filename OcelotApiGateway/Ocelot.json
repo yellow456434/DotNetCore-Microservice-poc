@@ -21,6 +21,25 @@
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "LoadBalancerOptions": { "Type": "LeastConnection" },
       "ReRoutesCaseSensitive": false
+    },
+    {
+
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        },
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/test3/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "ReRoutesCaseSensitive": false
     }
   ],
   "GlobalConfiguration": {
