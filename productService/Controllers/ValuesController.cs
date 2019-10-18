@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Consul;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -34,40 +35,64 @@ namespace productService.Controllers
 
         public ValuesController(ILogger<ValuesController> logger, IConfiguration config,
               IHttpClientFactory clientFactory,
-             IServiceResolver iserviceResolver, RpcClient rpcClient,
-             IConnectionMultiplexer redis)
-        { //, ProductDbContext productDb,
+             IServiceResolver iserviceResolver
+             )
+        { //ProductDbContext productDb,IConnectionMultiplexer redis, RpcClient rpcClient
             this.logger = logger;
             this.config = config;
             //this.productDb = productDb;
-            this.redis = redis;
+            //this.redis = redis;
             this.service = iserviceResolver.GetServiceByName("B");
             this.clientFactory = clientFactory;
-            this.rpcClient = rpcClient;
+            //this.rpcClient = rpcClient;
         }
+
+        [HttpGet("consulTest")]
+        public async Task<string> ConsulTest()
+        {
+            using (var consulClient = new ConsulClient(a => a.Address = new Uri("http://localhost:8500")))
+            {
+                var services = consulClient.Catalog.Service("ServiceA").Result.Response;
+                if (services != null && services.Any())
+                {
+                    Random r = new Random();
+                    int index = r.Next(services.Count());
+                    var service = services.ElementAt(index);
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        var response = await client.GetAsync($"http://{service.ServiceAddress}:{service.ServicePort}/api/values");
+                        var result = await response.Content.ReadAsStringAsync();
+                        return result;
+                    }
+                }
+            }
+
+            return "ok";
+        }
+
 
         [HttpGet("sendMsg")]
         public async Task<string> SendMsg(string msg)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "hello",
-                                 durable: true,
-                                 exclusive: false,
-                                 autoDelete: true,
-                                 arguments: null);
+            //var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
+            //using (var connection = factory.CreateConnection())
+            //using (var channel = connection.CreateModel())
+            //{
+            //    channel.QueueDeclare(queue: "hello",
+            //                     durable: true,
+            //                     exclusive: false,
+            //                     autoDelete: true,
+            //                     arguments: null);
 
-                string message = "Hello World!";
-                var body = Encoding.UTF8.GetBytes(message);
+            //    string message = "Hello World!";
+            //    var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(exchange: "",
-                                     routingKey: "hello",
-                                     basicProperties: null,
-                                     body: body);
-            }
-
+            //    channel.BasicPublish(exchange: "",
+            //                         routingKey: "hello",
+            //                         basicProperties: null,
+            //                         body: body);
+            //}
 
             return "ok";
         }
@@ -75,13 +100,12 @@ namespace productService.Controllers
         [HttpGet("sendRPCMsg")]
         public async Task<string> SendRPCMsg()
         {
-            var response =  await rpcClient.Call(DateTime.Now.ToString("HHmmss"));
-            IDatabase db = redis.GetDatabase(14);
-            db.StringIncrement("request");
+            //var response =  await rpcClient.Call(DateTime.Now.ToString("HHmmss"));
+            //IDatabase db = redis.GetDatabase(14);
+            //db.StringIncrement("request");
 
-            return response;
+            return "response";
         }
-
 
 
         //[CustomTestAuthorizationFilter]

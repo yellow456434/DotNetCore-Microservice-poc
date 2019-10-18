@@ -163,7 +163,7 @@ namespace productService
             //});
 
             //設定redis
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+            //services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
 
             //特定導向https 5001
             //services.AddHttpsRedirection(options =>
@@ -179,9 +179,9 @@ namespace productService
             services.AddTransient<ServiceA>();
             services.AddSingleton<ServiceB>();
             services.AddSingleton<IServiceResolver, ServiceResolver>();
-            services.AddSingleton<RabbitMQService>();
 
-            services.AddScoped<RpcClient>();
+            //services.AddSingleton<RabbitMQService>();
+            //services.AddScoped<RpcClient>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
