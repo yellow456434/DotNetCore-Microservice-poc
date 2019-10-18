@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTest", "TaskTest\TaskTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsulService", "ConsulService\ConsulService.csproj", "{50E92088-3BA0-46FF-BA30-7C6D2E48F349}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotApiGateway", "OcelotApiGateway\OcelotApiGateway.csproj", "{2A0894F0-5544-423F-A50A-B45CF3BF49CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{50E92088-3BA0-46FF-BA30-7C6D2E48F349}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50E92088-3BA0-46FF-BA30-7C6D2E48F349}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50E92088-3BA0-46FF-BA30-7C6D2E48F349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

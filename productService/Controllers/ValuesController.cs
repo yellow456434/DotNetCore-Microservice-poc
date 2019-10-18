@@ -50,7 +50,7 @@ namespace productService.Controllers
         [HttpGet("consulTest")]
         public async Task<string> ConsulTest()
         {
-            using (var consulClient = new ConsulClient(a => a.Address = new Uri("http://localhost:8500")))
+            using (var consulClient = new ConsulClient(a => a.Address = new Uri("http://localhost:5500")))
             {
                 var services = consulClient.Catalog.Service("ServiceA").Result.Response;
                 if (services != null && services.Any())
