@@ -22,7 +22,9 @@ namespace ConsulService
                 .UseStartup<Startup>()
                 .ConfigureKestrel((context, options) =>
                 {
-                    options.ListenAnyIP(5003);
+                    Environment.SetEnvironmentVariable("port", args[0]);
+                    Environment.SetEnvironmentVariable("consulPort", args[1]);
+                    options.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("port")));
                 });
     }
 }

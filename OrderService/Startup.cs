@@ -46,7 +46,7 @@ namespace OrderService
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHealthChecks("/");
             app.UseMvc();
         }
     }

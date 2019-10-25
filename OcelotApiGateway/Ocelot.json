@@ -46,7 +46,8 @@
     "ServiceDiscoveryProvider": {
       "Host": "localhost",
       "Port": 8500,
-      "Type": "Consul" // Consul ¡B PollConsul(­n·f°tPollingInterval)
+      "Type": "PollConsul",
+      "PollingInterval" :  "15000" // Consul »ò PollConsul(ÅäºÏPollingInterval)
     }
   }
 }
