@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace ConsulService.Controllers
 {
@@ -10,12 +11,19 @@ namespace ConsulService.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IConfiguration config;
+
+        public ValuesController(IConfiguration config)
+        {
+            this.config = config;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<string>> Get(string s = "")
         {
 
-            return new string[] { "Service" + Environment.GetEnvironmentVariable("port") };
+            return new string[] { "Service" + Environment.GetEnvironmentVariable("port"), config["ConsulSetting:" + s] };
         }
 
         //// GET api/values/5

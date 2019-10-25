@@ -27,6 +27,7 @@ namespace ConsulService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHealthChecks();
+            services.Configure<ConsulSetting>(Configuration.GetSection("ConsulSetting"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -48,7 +49,7 @@ namespace ConsulService
 
             app.UseHealthChecks("/");
 
-            app.RegisterConsul(lifetime);
+            //app.RegisterConsul(lifetime);
         }
     }
 }
