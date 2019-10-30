@@ -8,5 +8,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: hello-service
+          serviceName: my-service
           servicePort: 5000
