@@ -121,7 +121,8 @@ namespace productService
                         ValidateIssuerSigningKey = true,
                         //ValidIssuer = "123",
                         //ValidAudience = "123",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtKey"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtKey"])),
+                        ClockSkew = TimeSpan.Zero
                     };
 
                     //jwtBearerOptions.Events = new JwtBearerEvents()
