@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -181,6 +182,8 @@ namespace productService
             services.AddSingleton<ServiceB>();
             services.AddSingleton<IServiceResolver, ServiceResolver>();
 
+            services.AddHealthChecks();
+
             //services.AddSingleton<RabbitMQService>();
             //services.AddScoped<RpcClient>();
 
@@ -237,6 +240,8 @@ namespace productService
                 });
                 mapApp.UseMiddleware<CustomTestMiddleware>();
             });
+
+            app.UseHealthChecks("/");
 
             app.UseMiddleware<RequestResponseLogging>();
 

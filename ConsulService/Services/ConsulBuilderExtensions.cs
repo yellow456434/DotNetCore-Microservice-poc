@@ -14,7 +14,7 @@ namespace ConsulService.Services
         {
             var consulClient = new ConsulClient(x =>
             {
-                x.Address = new Uri("http://localhost:5500");
+                x.Address = new Uri("http://localhost:"+ Environment.GetEnvironmentVariable("consulPort"));
             });
 
             var registration = new AgentServiceRegistration()
@@ -22,12 +22,12 @@ namespace ConsulService.Services
                 ID = Guid.NewGuid().ToString(),
                 Name = "ServiceA",
                 Address = "localhost",
-                Port = 5003,
+                Port = Convert.ToInt32(Environment.GetEnvironmentVariable("port")),
                 Check = new AgentServiceCheck()
                 {
-                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
+                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(30),
                     Interval = TimeSpan.FromSeconds(10),
-                    HTTP = "http://host.docker.internal:5003/api/values/5",
+                    HTTP = "http://host.docker.internal:" + Environment.GetEnvironmentVariable("port") + "/1",
                     Timeout = TimeSpan.FromSeconds(5)
                 }
             };
