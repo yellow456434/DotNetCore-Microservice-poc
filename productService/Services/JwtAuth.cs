@@ -25,7 +25,7 @@ namespace productService.Services
         //          new Claim("uid", user.UID.ToString()),
         //          new Claim("groupId", user.GroupID),
         //      },
-        //      expires: DateTime.UtcNow.AddHours(1),
+        //      expires: DateTime.Now.AddHours(1),
         //      signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtKey"])), SecurityAlgorithms.HmacSha256)
         //    );
 
