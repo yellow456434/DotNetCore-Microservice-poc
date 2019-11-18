@@ -1,0 +1,19 @@
+kind: pipeline
+type: exec
+name: default
+
+platform:
+  os: windows
+  arch: amd64
+
+steps:
+- name: greeting
+  commands:
+  - echo hello world
+  - sc.exe stop productService
+  - cd productService
+  - dotnet publish -c Release -o .\publish
+  - cd publish
+  - Remove-Item C:\Web\BackEndApi\* -Recurse 
+  - move * C:\Web\BackEndApi\
+  - sc.exe start productService
