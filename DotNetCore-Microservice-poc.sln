@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsulService", "ConsulServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotApiGateway", "OcelotApiGateway\OcelotApiGateway.csproj", "{2A0894F0-5544-423F-A50A-B45CF3BF49CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A0894F0-5544-423F-A50A-B45CF3BF49CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
