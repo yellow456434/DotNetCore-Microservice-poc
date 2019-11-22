@@ -30,8 +30,8 @@ namespace IdentityServer
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {
-            var ic = ConnectionMultiplexer.Connect("127.0.0.1:6379,password=pw123");
+        {   
+            var ic = ConnectionMultiplexer.Connect(Configuration["Redis"].ToString());
 
             services.AddSingleton<IConnectionMultiplexer>(ic);
 

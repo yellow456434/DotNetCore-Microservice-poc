@@ -53,6 +53,12 @@ namespace IdentityServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        var port = (args.Length == 0) ? 5000 : Convert.ToInt32(args[0]);
+
+                        options.ListenAnyIP(port);
+                    });
                     webBuilder.UseSerilog();
                 });
     }
