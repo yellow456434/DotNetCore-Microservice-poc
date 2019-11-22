@@ -11,20 +11,13 @@ namespace IdentityServer
 {
     public static class Config
     {
-        public static IEnumerable<IdentityResource> Ids (){
-
-            var customProfile = new IdentityResource(
-            name: "custom.profile",
-            displayName: "Custom profile",
-            claimTypes: new[] { "location" });
-
-            return new IdentityResource[]
+        public static IEnumerable<IdentityResource> Ids =>
+            new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
-                customProfile
+                new IdentityResources.Profile()
             };
-        }
+        
 
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
@@ -98,7 +91,8 @@ namespace IdentityServer
                     AccessTokenLifetime = 300,
                     IdentityTokenLifetime = 300,
                     RefreshTokenExpiration = TokenExpiration.Absolute,
-                    AbsoluteRefreshTokenLifetime = 3600
+                    AbsoluteRefreshTokenLifetime = 3600,
+                    ConsentLifetime = 300
                 }
             };
 
