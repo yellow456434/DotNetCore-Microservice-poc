@@ -71,6 +71,28 @@ namespace productService.Controllers
             return "ok";
         }
 
+        public class TextMessage
+        {
+            public string message { get; set; }
+        }
+
+        [HttpPost("SendLineMsg")]
+        public async Task<string> SendLineMsg([FromBody]TextMessage tm)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://notify-api.line.me/api/notify");
+            var dict = new Dictionary<string, string>();
+            dict.Add("message", tm.message);
+
+            request.Content = new FormUrlEncodedContent(dict);            
+
+            var client = clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "xxxx");
+
+            var response = await client.SendAsync(request);
+            var data = await response.Content.ReadAsStringAsync();
+
+            return "ok";
+        }
 
         [HttpGet("sendMsg")]
         public async Task<string> SendMsg(string msg)
