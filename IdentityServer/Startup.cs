@@ -2,14 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using IdentityServer.Custom;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Stores;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,10 +36,24 @@ namespace IdentityServer
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {   
+        {
             var ic = ConnectionMultiplexer.Connect(Configuration["Redis"].ToString());
 
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(
+            //        builder =>
+            //        {
+            //            builder.WithOrigins("*")
+            //                                .AllowAnyHeader()
+            //                                .AllowAnyMethod();
+            //        });
+            //});
+
             services.AddSingleton<IConnectionMultiplexer>(ic);
+
+            //services.AddDataProtection().SetApplicationName("idsrv").PersistKeysToFileSystem(new DirectoryInfo(Configuration["DataProtectionPath"]));
+            services.AddDataProtection().SetApplicationName("idsrv").PersistKeysToStackExchangeRedis(ic, "DataProtection-Keys");
 
             // uncomment, if you want to add an MVC-based UI
             services.AddControllersWithViews();
@@ -51,6 +71,8 @@ namespace IdentityServer
                         EnableEndSessionEndpoint = false,
                         EnableDeviceAuthorizationEndpoint = false
                     };
+                    //otp.IssuerUri =  
+                    //otp.PublicOrigin = "http://localhost:8081";
                 })
                 .AddConfigurationStore(options =>
                 {
@@ -65,7 +87,8 @@ namespace IdentityServer
 
                     options.RedisConnectionMultiplexer = ic;
                 })
-                .AddRedisCaching(options => {
+                .AddRedisCaching(options =>
+                {
                     options.RedisConnectionMultiplexer = ic;
                 })
                 .AddClientStoreCache<ClientStore>()
@@ -75,30 +98,83 @@ namespace IdentityServer
             builder.Services.AddScoped<IAuthorizeResponseGenerator, WebcommAuthorizeResponseGenerator>();
 
             // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            //builder.AddDeveloperSigningCredential();
+
+            var certPath = (Environment.IsDevelopment()) ? Path.Combine(Directory.GetCurrentDirectory(), Configuration["Certificate:Path"]) : Configuration["Certificate:Path"];
+
+            builder.AddSigningCredential(new X509Certificate2(certPath, Configuration["Certificate:Password"]));
+
+            //services.AddSession();
+
+            //services.AddStackExchangeRedisCache((otp) =>
+            //{
+            //    otp.Configuration = Configuration["Redis"].ToString() + ",defaultDatabase=1";
+            //});
+
+            //services.AddAuthentication("cookie")
+            //.AddCookie("cookie", options =>
+            //{
+            //    //options.ExpireTimeSpan = new System.TimeSpan(0, 1, 10);
+            //    //options.SessionStore = new RedisCacheTicketStore(new Microsoft.Extensions.Caching.StackExchangeRedis.RedisCacheOptions()
+            //    //{
+            //    //    Configuration = Configuration["Redis"].ToString() + ",defaultDatabase=1"
+            //    //});
+
+            //    var idp = new ServiceCollection().AddDataProtection().PersistKeysToStackExchangeRedis(ic, "DataProtection-Keys").Services.BuildServiceProvider().GetRequiredService<IDataProtectionProvider>();
+            //    options.DataProtectionProvider = idp;
+            //});
+
+
         }
 
         public void Configure(IApplicationBuilder app)
         {
             InitializeDatabase(app);
 
+            app.Use(async (context, next) =>
+            {
+                System.Console.WriteLine(FormatHeaders(context.Request.Headers));
+
+                await next.Invoke();
+
+            });
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            // uncomment if you want to add MVC
             app.UseStaticFiles();
             app.UseRouting();
-
+            //app.UseCors();
+            //app.UseSession();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseIdentityServer();
 
-            // uncomment, if you want to add MVC
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        private string FormatHeaders(IHeaderDictionary headers)
+        {
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("[");
+            foreach (var (key, value) in headers)
+            {
+                stringBuilder.Append($"{key}: {value}; ");
+            }
+            stringBuilder.AppendLine("]");
+
+            return stringBuilder.ToString();
         }
 
         private void InitializeDatabase(IApplicationBuilder app)

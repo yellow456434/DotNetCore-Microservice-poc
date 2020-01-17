@@ -13,10 +13,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.2.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
     <PackageReference Include="ObjectDumper.NET" Version="2.4.19218.1" />
-    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.4" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
   </ItemGroup>
 
   <ItemGroup>
