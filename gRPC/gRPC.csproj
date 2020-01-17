@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <Protobuf Include="Protos\greet.proto" GrpcServices="Server" OutputDir="%(RelativePath)" CompileOutputs="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.23.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Protos\" />
+    </ItemGroup>
+</Project>

@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotApiGateway", "OcelotA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gRPC", "gRPC\gRPC.csproj", "{687B5E47-3675-4F15-93A1-8CD9E34E0085}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gRPCClient", "gRPCClient\gRPCClient.csproj", "{84E75D81-4433-49E7-B2BD-639FCF53A7BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15A2C85B-1A5F-4ADC-9FE2-EF630AD269A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{687B5E47-3675-4F15-93A1-8CD9E34E0085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{687B5E47-3675-4F15-93A1-8CD9E34E0085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{687B5E47-3675-4F15-93A1-8CD9E34E0085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{687B5E47-3675-4F15-93A1-8CD9E34E0085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84E75D81-4433-49E7-B2BD-639FCF53A7BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84E75D81-4433-49E7-B2BD-639FCF53A7BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84E75D81-4433-49E7-B2BD-639FCF53A7BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84E75D81-4433-49E7-B2BD-639FCF53A7BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
